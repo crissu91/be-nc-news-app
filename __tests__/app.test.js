@@ -58,3 +58,40 @@ describe("/api test suite", () => {
             })
         })
 });
+describe('GET /api/articles/:article_id', () => {
+    test('200: should respond with all articles that match the given article_id', () => {
+        return request(app)
+        .get('/api/articles/3')
+        .expect(200)
+        .then(({ body })=>{
+                expect(typeof body.article[0]).toBe("object"),
+                expect(body.article[0].article_id).toBe(3),
+                expect(body.article[0]).toHaveProperty(
+                    'article_id', expect.any(Number),
+                    'title', expect.any(String),
+                    'topic', expect.any(String),
+                    'author', expect.any(String),
+                    'body', expect.any(String),
+                    'created_at', expect.any(Number),
+                    'votes', expect.any(Number),
+                    'article_img_url', expect.any(String)
+        )
+        })
+    })
+    test("status: 400 responds with an error when article_id is not an integer", () => {
+        return request(app)
+            .get("/api/articles/first_article")
+            .expect(400)
+            .then(({ body }) => {
+            expect(body.msg).toBe("Bad request")
+            })
+        })
+    test("status: 404 responds with an error when given an article_id that doesn't exist", () => {
+        return request(app)
+            .get("/api/articles/999")
+            .expect(404)
+            .then(({ body}) => {
+                expect(body.msg).toBe("Article not found.");
+                })
+            })
+})
