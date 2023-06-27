@@ -1,3 +1,5 @@
+const endpoints = require('../endpoints.json')
+
 exports.getApi = ( __, res) => {
-    res.status(200).send({msg : "Everything is working fine!"})
+        res.status(200).send({endpoints})
 }
