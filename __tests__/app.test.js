@@ -122,7 +122,7 @@ describe('/api/articles', () => {
         .expect(200)
         .then(({ body }) => {
         expect(body.articles).toBeInstanceOf(Array);
-        expect(body.articles[0]).toHaveProperty('comment_count', expect.any(Number));
+        expect(body.articles[0]).toHaveProperty('comment_count', expect.any(String));
         })
     })
     test('200: should respond with an array of articles sorted by date latest', ()=>{

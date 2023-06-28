@@ -10,24 +10,21 @@ exports.selectArticlesById = (article_id) =>{
 }
 
 exports.selectAllArticles = () => {
-    const comments = db.query("SELECT * FROM comments;").then(({rows})=> rows)
-    const articles = db.query("SELECT * FROM articles ORDER BY created_at DESC;").then(({rows})=> rows)
-    
-    return Promise.all([comments, articles]).then(([commentsResponse, articlesResponse]) => {
-            return articlesResponse.map(
-                ({ article_id, title, topic, author, created_at, votes, article_img_url }) => ({
-                article_id,
-                title,
-                topic,
-                author,
-                created_at,
-                votes,
-                article_img_url,
-                comment_count: commentsResponse.filter(
-                    (comment) => comment.article_id === article_id
-                ).length
-                })
-            )
-        }
-    )
+    const articlesQuery = `SELECT
+        a.article_id,
+        a.title,
+        a.topic,
+        a.author,
+        a.created_at,
+        a.votes,
+        a.article_img_url,
+        COUNT(c.comment_id) AS comment_count
+    FROM articles AS a
+    LEFT JOIN comments AS c ON a.article_id = c.article_id
+    GROUP BY a.article_id
+    ORDER BY a.created_at DESC;`;
+
+    return db.query(articlesQuery).then(({ rows }) => {
+    return rows;
+    });
 }
