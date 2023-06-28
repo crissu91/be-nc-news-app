@@ -25,5 +25,19 @@
         }
       ]
     }
+  },
+  "GET /api/articles/article_id/comments": {
+    "description": "Returns an array of comments objects for the specific article_id",
+    "queries": ["article_id", "sort_by", "order"],
+    "exampleResponse": {
+      "comments": [{
+          "body": "This morning, I showered for nine minutes.",
+          "votes": 16,
+          "author": "butter_bridge",
+          "article_id": 1,
+          "created_at": 1595294400000
+      }
+      ]
+    }
   }
 }

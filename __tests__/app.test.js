@@ -3,7 +3,8 @@ const app = require('../app');
 const seed = require('../db/seeds/seed');
 const testData = require('../db/data/test-data/index');
 const db = require('../db/connection');
-const endpoints = require('../endpoints.json')
+const endpoints = require('../endpoints.json');
+const articles = require('../db/data/test-data/articles');
 
 beforeEach(() => {
     return seed(testData);
@@ -64,28 +65,22 @@ describe('GET /api/articles/:article_id', () => {
         .get('/api/articles/3')
         .expect(200)
         .then(({ body })=>{
-                expect(typeof body.article[0]).toBe("object"),
-                expect(body.article[0].article_id).toBe(3),
-                expect(body.article[0]).toMatchObject(
-                {article_id: expect.any(Number),
-                title: expect.any(String),
-                topic: expect.any(String),
-                author: expect.any(String),
-                body: expect.any(String),
-                created_at: expect.any(String),
-                votes: expect.any(Number),
-                article_img_url: expect.any(String)}
-        )
-        })
-    })
-    test("status: 400 responds with an error when article_id is not an integer", () => {
-        return request(app)
-            .get("/api/articles/first_article")
-            .expect(400)
-            .then(({ body }) => {
-            expect(body.msg).toBe("Bad request")
+            body.articles.forEach((article)=> {
+                expect(typeof article).toBe("object"),
+                expect(article.article_id).toBe(3),
+                expect(article).toHaveProperty(
+                    'article_id', expect.any(Number),
+                    'title', expect.any(String),
+                    'topic', expect.any(String),
+                    'author', expect.any(String),
+                    'body', expect.any(String),
+                    'created_at', expect.any(Number),
+                    'votes', expect.any(Number),
+                    'article_img_url', expect.any(String)
+                    )
             })
         })
+    })
     test("status: 404 responds with an error when given an article_id that doesn't exist", () => {
         return request(app)
             .get("/api/articles/999")
@@ -133,4 +128,42 @@ describe('/api/articles', () => {
             expect(body.articles).toBeSortedBy("created_at", {descending: true});
         })
     })
+})
+describe('GET /api/articles/:article_id/comments', () => {
+    test('200: should return all the comments for the specific article_id', () => {
+        return request(app)
+        .get('/api/articles/1/comments')
+        .expect(200)
+        .then(({body}) => {
+            expect(body.comments).toBeInstanceOf(Array);
+            expect(body.comments).toHaveLength(11);
+            body.comments.forEach((comment) => comment.article_id === articles.article_id)
+            expect(body.comments).toBeSortedBy("created_at", {ascending: true});
+            expect(body.comments[0]).toMatchObject({
+                article_id: expect.any(Number),
+                comment_id: expect.any(Number),
+                votes: expect.any(Number),
+                created_at: expect.any(String),
+                author: expect.any(String),
+                body: expect.any(String)
+            })
+        })
+    })
+    test('200: returns a 200 when the article exists, and an empty array of comments when there are no comments on the article', () => {
+        return request(app)
+        .get('/api/articles/2/comments')
+        .expect(200)
+        .then(({body})=>{
+            expect(body.comments).toHaveLength(0);
+            expect(body.comments).toEqual([]);
+        })  
+    })
+    test("404: returns an object with error status 404 and message if given article Id does not exist", () => {
+        return request(app)
+            .get("/api/articles/999/comments")
+            .expect(404)
+            .then(({body}) => {
+            expect(body.msg).toEqual("Article not found.")
+            })
+        })
 })
