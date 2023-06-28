@@ -65,9 +65,10 @@ describe('GET /api/articles/:article_id', () => {
         .get('/api/articles/3')
         .expect(200)
         .then(({ body })=>{
-                expect(typeof body.article[0]).toBe("object"),
-                expect(body.article[0].article_id).toBe(3),
-                expect(body.article[0]).toHaveProperty(
+            body.articles.forEach((article)=> {
+                expect(typeof article).toBe("object"),
+                expect(article.article_id).toBe(3),
+                expect(article).toHaveProperty(
                     'article_id', expect.any(Number),
                     'title', expect.any(String),
                     'topic', expect.any(String),
@@ -76,15 +77,16 @@ describe('GET /api/articles/:article_id', () => {
                     'created_at', expect.any(Number),
                     'votes', expect.any(Number),
                     'article_img_url', expect.any(String)
-        )
+                    )
+            })
         })
     })
     test("status: 400 responds with an error when article_id is not an integer", () => {
         return request(app)
-            .get("/api/articles/first_article")
+            .get("/api/articles/first-article")
             .expect(400)
             .then(({ body }) => {
-            expect(body.msg).toBe("Bad request")
+            expect(body.msg).toBe("Article ID is invalid")
             })
         })
     test("status: 404 responds with an error when given an article_id that doesn't exist", () => {
@@ -96,7 +98,7 @@ describe('GET /api/articles/:article_id', () => {
                 })
             })
 })
-describe('/api/articles/:article_id/comments', () => {
+describe('GET /api/articles/:article_id/comments', () => {
     test('200: should return all the comments for the specific article_id', () => {
         return request(app)
         .get('/api/articles/1/comments')
@@ -125,4 +127,20 @@ describe('/api/articles/:article_id/comments', () => {
             expect(body.comments).toEqual([]);
         })  
     })
+    test("404: returns an object with error status 404 and message if given article Id does not exist", () => {
+        return request(app)
+            .get("/api/articles/999/comments")
+            .expect(404)
+            .then(({body}) => {
+            expect(body.msg).toEqual("Article not found.")
+            })
+        })
+    test("400: returns an object with error status 400 and message if given article Id is invalid", () => {
+        return request(app)
+            .get("/api/articles/id/comments")
+            .expect(400)
+            .then(({body}) => {
+                expect(body.msg).toEqual("Article ID is invalid");
+            })
+        })
 })
