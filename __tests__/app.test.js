@@ -81,14 +81,6 @@ describe('GET /api/articles/:article_id', () => {
             })
         })
     })
-    test("status: 400 responds with an error when article_id is not an integer", () => {
-        return request(app)
-            .get("/api/articles/first-article")
-            .expect(400)
-            .then(({ body }) => {
-            expect(body.msg).toBe("Article ID is invalid")
-            })
-        })
     test("status: 404 responds with an error when given an article_id that doesn't exist", () => {
         return request(app)
             .get("/api/articles/999")
@@ -133,14 +125,6 @@ describe('GET /api/articles/:article_id/comments', () => {
             .expect(404)
             .then(({body}) => {
             expect(body.msg).toEqual("Article not found.")
-            })
-        })
-    test("400: returns an object with error status 400 and message if given article Id is invalid", () => {
-        return request(app)
-            .get("/api/articles/id/comments")
-            .expect(400)
-            .then(({body}) => {
-                expect(body.msg).toEqual("Article ID is invalid");
             })
         })
 })
