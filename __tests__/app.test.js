@@ -95,3 +95,33 @@ describe('GET /api/articles/:article_id', () => {
                 })
             })
 })
+describe('/api/articles/:article_id/comments', () => {
+    test('200: should return all the comments for the specific article_id', () => {
+        return request(app)
+        .get('/api/articles/1/comments')
+        .expect(200)
+        .then(({body}) => {
+            expect(body.comments).toBeInstanceOf(Array);
+            expect(body.comments).toHaveLength(11);
+            expect(body.comments[0].article_id).toBe(1);
+            expect(body.comments).toBeSortedBy("created_at", {ascending: true});
+            expect(body.comments[0]).toMatchObject({
+                article_id: expect.any(Number),
+                comment_id: expect.any(Number),
+                votes: expect.any(Number),
+                created_at: expect.any(String),
+                author: expect.any(String),
+                body: expect.any(String)
+            })
+        })
+    })
+    test('200: returns a 200 when the article exists, and an empty array of comments when there are no comments on the article', () => {
+        return request(app)
+        .get('/api/articles/2/comments')
+        .expect(200)
+        .then(({body})=>{
+            expect(body.comments).toHaveLength(0);
+            expect(body.comments).toEqual([]);
+        })  
+    })
+})
