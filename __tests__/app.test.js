@@ -90,6 +90,45 @@ describe('GET /api/articles/:article_id', () => {
                 })
             })
 })
+describe('/api/articles', () => {
+    test('200: should return a list of all the articles', () => {
+        return request(app)
+        .get('/api/articles')
+        .expect(200)
+        .then(({body}) => {
+            expect(body.articles).toBeInstanceOf(Array),
+            expect(body.articles.length).toBe(13)
+        body.articles.forEach((article) => {
+            expect(article).toMatchObject({
+                article_id: expect.any(Number),
+                title: expect.any(String),
+                topic: expect.any(String),
+                author: expect.any(String),
+                created_at: expect.any(String),
+                votes: expect.any(Number),
+                article_img_url: expect.any(String)
+            })
+        })
+        })
+    })
+    test('200:, should respond with an array of the articles containing a comment_count value equal to the number of comments', () => {
+        return request(app)
+        .get('/api/articles')
+        .expect(200)
+        .then(({ body }) => {
+        expect(body.articles).toBeInstanceOf(Array);
+        expect(body.articles[0]).toHaveProperty('comment_count', expect.any(String));
+        })
+    })
+    test('200: should respond with an array of articles sorted by date latest', ()=>{
+        return request(app)
+        .get('/api/articles')
+        .expect(200)
+        .then(({body}) =>{
+            expect(body.articles).toBeSortedBy("created_at", {descending: true});
+        })
+    })
+})
 describe('GET /api/articles/:article_id/comments', () => {
     test('200: should return all the comments for the specific article_id', () => {
         return request(app)

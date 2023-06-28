@@ -10,7 +10,7 @@
     }
   },
   "GET /api/articles": {
-    "description": "Returns an on object containing an array of all articles",
+    "description": "Returns an on object containing an array of all articles sorted by date descending order",
     "queries": ["author", "topic", "sort_by", "order"],
     "exampleResponse": {
       "articles": [
