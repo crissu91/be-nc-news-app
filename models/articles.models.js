@@ -13,20 +13,21 @@ exports.selectAllArticles = () => {
     const comments = db.query("SELECT * FROM comments;").then(({rows})=> rows)
     const articles = db.query("SELECT * FROM articles ORDER BY created_at DESC;").then(({rows})=> rows)
     
-    return Promise.all([comments, articles]).then(([commentsResponse, articlesResponse]) => 
-        articlesResponse.map(
-            ({ article_id, title, topic, author, created_at, votes, article_img_url }) => ({
-            article_id,
-            title,
-            topic,
-            author,
-            created_at,
-            votes,
-            article_img_url,
-            comment_count: commentsResponse.filter(
-                (comment) => comment.article_id === article_id
-            ).length
-            })
-        )
+    return Promise.all([comments, articles]).then(([commentsResponse, articlesResponse]) => {
+            return articlesResponse.map(
+                ({ article_id, title, topic, author, created_at, votes, article_img_url }) => ({
+                article_id,
+                title,
+                topic,
+                author,
+                created_at,
+                votes,
+                article_img_url,
+                comment_count: commentsResponse.filter(
+                    (comment) => comment.article_id === article_id
+                ).length
+                })
+            )
+        }
     )
 }
