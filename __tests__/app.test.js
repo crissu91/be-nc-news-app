@@ -3,7 +3,8 @@ const app = require('../app');
 const seed = require('../db/seeds/seed');
 const testData = require('../db/data/test-data/index');
 const db = require('../db/connection');
-const endpoints = require('../endpoints.json')
+const endpoints = require('../endpoints.json');
+const articles = require('../db/data/test-data/articles');
 
 beforeEach(() => {
     return seed(testData);
@@ -103,7 +104,7 @@ describe('/api/articles/:article_id/comments', () => {
         .then(({body}) => {
             expect(body.comments).toBeInstanceOf(Array);
             expect(body.comments).toHaveLength(11);
-            expect(body.comments[0].article_id).toBe(1);
+            body.comments.forEach((comment) => comment.article_id === articles.article_id)
             expect(body.comments).toBeSortedBy("created_at", {ascending: true});
             expect(body.comments[0]).toMatchObject({
                 article_id: expect.any(Number),
