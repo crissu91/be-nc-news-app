@@ -165,7 +165,15 @@ describe('GET /api/articles/:article_id/comments', () => {
             .then(({body}) => {
             expect(body.msg).toEqual("Article not found.")
             })
-        })
+    })
+    test("400: responds with an error when article id is in an invalid format", () => {
+        return request(app)
+            .post("/api/articles/first-article/comments")
+            .expect(400)
+            .then(({ body }) => {
+            expect(body.msg).toBe("Invalid article id.");
+            });
+    });
 })
 describe("POST /api/articles/:article_id/comments", () => {
     test("201: should respond with the posted comment", () => {
@@ -200,7 +208,7 @@ describe("POST /api/articles/:article_id/comments", () => {
                         article_id: expect.any(Number),
                         body: expect.any(String),
                         created_at: expect.any(String),
-                        votes:expect.any(Number)
+                        votes: expect.any(Number)
                     })
                 })
             })
@@ -228,6 +236,18 @@ describe("POST /api/articles/:article_id/comments", () => {
                 expect(body.msg).toBe("Article not found.");
             })
     })
+    test("400: responds with an error when article id is in an invalid format", () => {
+        return request(app)
+            .post("/api/articles/first-article/comments")
+            .send({
+                username: "lurker",
+                body: "This is a great article!"
+            })
+            .expect(400)
+            .then(({ body }) => {
+            expect(body.msg).toBe("Invalid article id.");
+            });
+    });
     test("404: responds with an error when username doesn't exist", () => {
         return request(app)
             .post("/api/articles/1/comments")
