@@ -3,7 +3,7 @@ const { handlePsqlErrors, handleCustomErrors, handleServerErrors } = require('./
 const { getApi } = require('./controllers/api.controller')
 const { getAllTopics } = require('./controllers/topics.controller');
 const { getArticlesById, getAllArticles } = require('./controllers/articles.controller');
-const { getCommentsByArticleId, postCommentByArticleId } = require('./controllers/comments.controller');
+const { getCommentsByArticleId, postCommentByArticleId, deleteCommentById } = require('./controllers/comments.controller');
 
 
 const app = express();
@@ -20,6 +20,8 @@ app.get('/api/articles/:article_id/comments', getCommentsByArticleId);
 app.get('/api/articles', getAllArticles);
 
 app.post('/api/articles/:article_id/comments', postCommentByArticleId);
+
+app.delete('/api/comments/:comment_id', deleteCommentById );
 
 app.use(handleCustomErrors);
 
