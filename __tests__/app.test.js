@@ -271,6 +271,15 @@ describe('PATCH /api/articles/:article_id', () => {
                 expect(body.article.votes).toBe(101)
             })
         })
+    test('400: should return an error if invalid body', () =>{
+        return request(app)
+            .patch('/api/articles/1')
+            .send({ inc_votes: 'two' })
+            .expect(400)
+            .then(({ body }) => {
+                expect(body.msg).toBe('Bad request')
+            })
+    })
 })
     test("400: responds with an error when article id is in an invalid format", () => {
         return request(app)
