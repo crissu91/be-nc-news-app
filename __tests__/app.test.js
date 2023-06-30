@@ -306,9 +306,6 @@ describe('DELETE /api/comments/:comment_id', () =>{
         return request(app)
         .delete('/api/comments/9')
         .expect(204)
-        .then(({body}) => {
-            expect(body).toEqual({})
-        })
     })
     test('404: should inform the user the comment_id does not exist', () => {
         return request(app)
