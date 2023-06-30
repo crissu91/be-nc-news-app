@@ -349,8 +349,24 @@ describe('FEATURE: GET /api/articles (queries)', () =>{
         .expect(200)
         .then(({ body }) => {
         expect(body.articles.length).toBeGreaterThan(0),
-        expect(body.articles[0].topic).toEqual('mitch'),
+        expect(body.articles[0].topic).toEqual('mitch')
+        })
+    })
+    test('200: should respond with an array of articles sorted by date descending', () => {
+        return request(app)
+        .get('/api/articles?topic=mitch&sort_by=created_at&order=desc')
+        .expect(200)
+        .then(({ body }) => {
         expect(body.articles).toBeSortedBy("created_at", {descending: true})
+        })
+    })
+    test('200: should respond with an empty array if topic is valid but no articles', () => {
+        return request(app)
+        .get('/api/articles?topic=paper')
+        .expect(200)
+        .then(({ body }) => {
+        expect(body.articles.length).toBe(0),
+        expect(body.articles).toEqual([])
         })
     })
     test('400: should return an error if an invalid sort_by parameter is given', () => {
