@@ -22,3 +22,25 @@ exports.insertCommentByArticleId = (body, article_id) => {
     })
 }
 
+exports.checkCommentIdExists = (comment_id) => {
+    if (/\D+/.test(comment_id)) {
+        return Promise.reject({status: 400, msg: "Bad request"})
+    }
+    else if (/\d+/.test(comment_id)) {
+        return db.query("SELECT * FROM comments WHERE comment_id = $1", [comment_id]).then(({rows})=> {
+            if (rows.length === 0) {
+                return Promise.reject({status: 404, msg: "Comment not found."})
+            }
+        else return rows
+        })
+    }
+}
+exports.removeCommentById = (comment_id) =>{
+    return db.query('DELETE FROM comments WHERE comment_id = $1 RETURNING *;', [comment_id])
+    .then(({rows}) => {
+        if (rows.length === 0) {
+            return Promise.reject({ status: 404, msg: "Comment not found."})
+        }
+        else return ({msg: 'Comment deleted successfully.'})
+    })
+}
