@@ -55,7 +55,7 @@ Finally to run the server enter the following command in your terminal window:
   ```
 This will run the server on port 9090. All endpoints can be found locally on ```http://localhost:9090```.
 
-## Testing
+# Testing
 
 To test the API navigate to the project directory and enter the following command:
   ```
@@ -103,15 +103,15 @@ DELETE /api/comments/:comment_id
 ```
 Deletes a comment
 
-## Authors
+# Authors
 
 - Cristina Stefan
 
-## License
+# License
 
 This project is licensed and owned by NorthCoders.
 
-## Acknowledgments
+# Acknowledgments
 
 Thanks to all the tutors for all the NChelp during this project.
 
