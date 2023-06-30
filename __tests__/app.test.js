@@ -401,7 +401,6 @@ describe('FEATURE: GET /api/articles/:article_id (comment_count)', () => {
         .get('/api/articles/1')
         .expect(200)
         .then(({ body }) => {
-            console.log(body)
         expect(body.articles).toBeInstanceOf(Array),
         body.articles.forEach((article) => {
             expect(article).toHaveProperty('comment_count', expect.any(String))
