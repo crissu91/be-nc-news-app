@@ -261,3 +261,29 @@ describe("POST /api/articles/:article_id/comments", () => {
             })
     })
 })
+describe('DELETE /api/comments/:comment_id', () =>{
+    test('204: should delete the comment by comment_id', () =>{
+        return request(app)
+        .delete('/api/comments/9')
+        .expect(204)
+        .then(({body}) => {
+            expect(body).toEqual({})
+        })
+    })
+    test('404: should inform the user the comment_id does not exist', () => {
+        return request(app)
+        .delete('/api/comments/999')
+        .expect(404)
+        .then(({ body }) => {
+        expect(body.msg).toEqual('Comment not found.')
+        })
+    })
+    test('400: should inform the user the comment_id is incorrect format', () => {
+        return request(app)
+        .delete('/api/comments/an-id')
+        .expect(400)
+        .then(({ body }) => {
+        expect(body.msg).toEqual('Bad request')
+        })
+    })
+})
