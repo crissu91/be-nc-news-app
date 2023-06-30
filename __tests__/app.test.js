@@ -342,3 +342,39 @@ describe('GET /api/users', ()=>{
             })
     })
 })
+describe('FEATURE: GET /api/articles (queries)', () =>{
+    test('200: should respond with an array of the articles filtered by a specific topic', () => { 
+        return request(app)
+        .get('/api/articles?topic=mitch&sort_by=created_at&order=desc')
+        .expect(200)
+        .then(({ body }) => {
+        expect(body.articles.length).toBeGreaterThan(0),
+        expect(body.articles[0].topic).toEqual('mitch'),
+        expect(body.articles).toBeSortedBy("created_at", {descending: true})
+        })
+    })
+    test('400: should return an error if an invalid sort_by parameter is given', () => {
+        return request(app)
+        .get('/api/articles?sort_by=invalid_parameter')
+        .expect(400)
+        .then(({body}) => {
+            expect(body.msg).toBe('Bad request')
+        })
+    })
+    test('400: should return an error if an invalid order_by parameter is given', () => {
+        return request(app)
+        .get('/api/articles?order_by=invalid_parameter')
+        .expect(400)
+        .then(({body}) => {
+            expect(body.msg).toBe('Bad request')
+        })
+    })
+    test('400: should return an error if an invalid topic parameter is given', () => {
+        return request(app)
+        .get('/api/articles?topic=banana')
+        .expect(400)
+        .then(({body}) => {
+            expect(body.msg).toBe('Bad request')
+        })
+    })
+})
