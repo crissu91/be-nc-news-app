@@ -23,8 +23,8 @@ exports.selectArticlesById = (article_id) =>{
         })
 }
 
-exports.selectAllArticles = () => {
-    const articlesQuery = `SELECT
+exports.selectAllArticles = (topic, sort_by = 'created_at', order = 'desc') => {
+    let articlesQuery = `SELECT
         a.article_id,
         a.title,
         a.topic,
@@ -34,13 +34,33 @@ exports.selectAllArticles = () => {
         a.article_img_url,
         COUNT(c.comment_id) AS comment_count
     FROM articles AS a
-    LEFT JOIN comments AS c ON a.article_id = c.article_id
-    GROUP BY a.article_id
-    ORDER BY a.created_at DESC;`;
+    LEFT JOIN comments AS c 
+    ON a.article_id = c.article_id`;
 
-    return db.query(articlesQuery).then(({ rows }) => {
-    return rows;
-    });
+    const validSortBy = ['title', 'article_id', 'votes', 'created_at', 'topic']
+    const validTopics = ['mitch', 'cats', 'paper']
+    const validOrderBy = ['asc', 'desc']
+    const values = []
+
+    if (!validTopics.includes(topic) && topic) {
+        return Promise.reject({ status: 400, msg:"Bad request" })
+    } 
+    if (!validSortBy.includes(sort_by) && sort_by) {
+        return Promise.reject({ status: 400, msg:"Bad request" })
+    }
+    if (!validOrderBy.includes(order) && order) {
+        return Promise.reject({ status: 400, msg:"Bad request" })
+    }
+    if (topic) {
+        articlesQuery += ` WHERE topic = $1`;
+        values.push(topic)
+    }
+
+    articlesQuery += ` GROUP BY a.article_id ORDER BY ${sort_by} ${order}`;
+    
+    return db.query(articlesQuery, values).then(({ rows }) => {
+        return rows
+    })
 }
 
 exports.updateArticleByArticleId = (inc_votes, article_id) => {

@@ -342,3 +342,56 @@ describe('GET /api/users', ()=>{
             })
     })
 })
+describe('FEATURE: GET /api/articles (queries)', () =>{
+    test('200: should respond with an array of the articles filtered by a specific topic', () => { 
+        return request(app)
+        .get('/api/articles?topic=mitch&sort_by=created_at&order=desc')
+        .expect(200)
+        .then(({ body }) => {
+        expect(body.articles.length).toBeGreaterThan(0)
+        body.articles.forEach((article) => 
+            expect(article.topic).toEqual('mitch'))
+        })
+    })
+    test('200: should respond with an array of articles sorted by date ascending', () => {
+        return request(app)
+        .get('/api/articles?topic=mitch&sort_by=created_at&order=asc')
+        .expect(200)
+        .then(({ body }) => {
+        expect(body.articles).toBeSortedBy("created_at", {ascending: true})
+        })
+    })
+    test('200: should respond with an empty array if topic is valid but no articles', () => {
+        return request(app)
+        .get('/api/articles?topic=paper')
+        .expect(200)
+        .then(({ body }) => {
+        expect(body.articles.length).toBe(0),
+        expect(body.articles).toEqual([])
+        })
+    })
+    test('400: should return an error if an invalid sort_by parameter is given', () => {
+        return request(app)
+        .get('/api/articles?sort_by=invalid_parameter')
+        .expect(400)
+        .then(({body}) => {
+            expect(body.msg).toBe('Bad request')
+        })
+    })
+    test('400: should return an error if an invalid order_by parameter is given', () => {
+        return request(app)
+        .get('/api/articles?order=invalid_parameter')
+        .expect(400)
+        .then(({body}) => {
+            expect(body.msg).toBe('Bad request')
+        })
+    })
+    test('400: should return an error if an invalid topic parameter is given', () => {
+        return request(app)
+        .get('/api/articles?topic=banana')
+        .expect(400)
+        .then(({body}) => {
+            expect(body.msg).toBe('Bad request')
+        })
+    })
+})
