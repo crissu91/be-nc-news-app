@@ -260,4 +260,35 @@ describe("POST /api/articles/:article_id/comments", () => {
             expect(body.msg).toBe("Invalid username.");
             })
     })
+});
+describe('PATCH /api/articles/:article_id', () => {
+    test('200: should return the updated article by article_id', () =>{
+        return request(app)
+            .patch('/api/articles/1')
+            .send({ inc_votes: 1 })
+            .expect(200)
+            .then(({ body }) => {
+                expect(body.article.votes).toBe(101)
+            })
+        })
+})
+    test("400: responds with an error when article id is in an invalid format", () => {
+        return request(app)
+            .patch("/api/articles/first-article")
+            .send({ inc_votes: 1 })
+            .expect(400)
+            .then(({ body }) => {
+                console.log(body)
+            expect(body.msg).toBe("Invalid article id.");
+        })
+})
+    test("404: responds with an error when given an article_id that doesn't exist", () => {
+        return request(app)
+            .patch("/api/articles/999")
+            .send({ inc_votes: 1 })
+            .expect(404)
+            .then(({ body }) => {
+                console.log(body)
+            expect(body.msg).toBe("Article not found.");
+        })
 })
