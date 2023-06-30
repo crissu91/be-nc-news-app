@@ -23,7 +23,7 @@ exports.selectArticlesById = (article_id) =>{
         })
 }
 
-exports.selectAllArticles = (topic, sort_by = 'created_at', order_by = 'DESC') => {
+exports.selectAllArticles = (topic, sort_by = 'created_at', order = 'desc') => {
     let articlesQuery = `SELECT
         a.article_id,
         a.title,
@@ -39,7 +39,7 @@ exports.selectAllArticles = (topic, sort_by = 'created_at', order_by = 'DESC') =
 
     const validSortBy = ['title', 'article_id', 'votes', 'created_at', 'topic']
     const validTopics = ['mitch', 'cats', 'paper']
-    const validOrderBy = ['ASC', 'DESC']
+    const validOrderBy = ['asc', 'desc']
     const values = []
 
     if (!validTopics.includes(topic) && topic) {
@@ -48,14 +48,15 @@ exports.selectAllArticles = (topic, sort_by = 'created_at', order_by = 'DESC') =
     if (!validSortBy.includes(sort_by) && sort_by) {
         return Promise.reject({ status: 400, msg:"Bad request" })
     }
-    if (!validOrderBy.includes(order_by) && order_by) {
+    if (!validOrderBy.includes(order) && order) {
         return Promise.reject({ status: 400, msg:"Bad request" })
     }
     if (topic) {
         articlesQuery += ` WHERE topic = $1`;
         values.push(topic)
     }
-    articlesQuery += ` GROUP BY a.article_id ORDER BY ${sort_by} ${order_by}`;
+
+    articlesQuery += ` GROUP BY a.article_id ORDER BY ${sort_by} ${order}`;
     
     return db.query(articlesQuery, values).then(({ rows }) => {
         return rows

@@ -348,16 +348,17 @@ describe('FEATURE: GET /api/articles (queries)', () =>{
         .get('/api/articles?topic=mitch&sort_by=created_at&order=desc')
         .expect(200)
         .then(({ body }) => {
-        expect(body.articles.length).toBeGreaterThan(0),
-        expect(body.articles[0].topic).toEqual('mitch')
+        expect(body.articles.length).toBeGreaterThan(0)
+        body.articles.forEach((article) => 
+            expect(article.topic).toEqual('mitch'))
         })
     })
-    test('200: should respond with an array of articles sorted by date descending', () => {
+    test('200: should respond with an array of articles sorted by date ascending', () => {
         return request(app)
-        .get('/api/articles?topic=mitch&sort_by=created_at&order=desc')
+        .get('/api/articles?topic=mitch&sort_by=created_at&order=asc')
         .expect(200)
         .then(({ body }) => {
-        expect(body.articles).toBeSortedBy("created_at", {descending: true})
+        expect(body.articles).toBeSortedBy("created_at", {ascending: true})
         })
     })
     test('200: should respond with an empty array if topic is valid but no articles', () => {
@@ -379,7 +380,7 @@ describe('FEATURE: GET /api/articles (queries)', () =>{
     })
     test('400: should return an error if an invalid order_by parameter is given', () => {
         return request(app)
-        .get('/api/articles?order_by=invalid_parameter')
+        .get('/api/articles?order=invalid_parameter')
         .expect(400)
         .then(({body}) => {
             expect(body.msg).toBe('Bad request')
