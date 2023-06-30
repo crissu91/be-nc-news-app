@@ -4,6 +4,7 @@ const { getApi } = require('./controllers/api.controller')
 const { getAllTopics } = require('./controllers/topics.controller');
 const { getArticlesById, getAllArticles, patchArticleById } = require('./controllers/articles.controller');
 const { getCommentsByArticleId, postCommentByArticleId } = require('./controllers/comments.controller');
+const { getAllUsers } = require('./controllers/users.controller');
 
 
 const app = express();
@@ -22,6 +23,8 @@ app.get('/api/articles', getAllArticles);
 app.post('/api/articles/:article_id/comments', postCommentByArticleId);
 
 app.patch('/api/articles/:article_id', patchArticleById);
+
+app.get('/api/users', getAllUsers);
 
 app.use(handleCustomErrors);
 
