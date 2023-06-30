@@ -278,7 +278,7 @@ describe('PATCH /api/articles/:article_id', () => {
             .send({ inc_votes: 1 })
             .expect(400)
             .then(({ body }) => {
-            expect(body.msg).toBe("Invalid article id.");
+            expect(body.msg).toBe("Bad request");
         })
 })
     test("404: responds with an error when given an article_id that doesn't exist", () => {
