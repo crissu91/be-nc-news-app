@@ -36,8 +36,18 @@
           "author": "butter_bridge",
           "article_id": 1,
           "created_at": 1595294400000
-      }
-      ]
+      }]
+    }
+  },
+  "GET /api/users": {
+    "description":"serves an array of all users",
+    "queries": ["username", "name", "avatar_url" ],
+    "exampleResponse": {
+      "users": [{
+        "username": "icellusedkars",
+        "name": "sam",
+        "avatar_url": "https://avatars2.githubusercontent.com/u/24604688?s=460&v=4"
+      }]
     }
   }
 }

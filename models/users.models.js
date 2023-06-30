@@ -8,3 +8,8 @@ exports.checkIfUsernameExists = (username) => {
             else return username
         })
 }
+exports.selectAllUsers = () => {
+    return db.query("SELECT * FROM users;").then(({rows})=>{
+        return rows
+    })
+}
