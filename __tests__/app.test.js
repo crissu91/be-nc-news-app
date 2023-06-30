@@ -260,7 +260,8 @@ describe("POST /api/articles/:article_id/comments", () => {
             expect(body.msg).toBe("Invalid username.");
             })
     })
-});
+})
+
 describe('PATCH /api/articles/:article_id', () => {
     test('200: should return the updated article by article_id', () =>{
         return request(app)
@@ -299,6 +300,33 @@ describe('PATCH /api/articles/:article_id', () => {
             expect(body.msg).toBe("Article not found.");
     })
 })
+
+describe('DELETE /api/comments/:comment_id', () =>{
+    test('204: should delete the comment by comment_id', () =>{
+        return request(app)
+        .delete('/api/comments/9')
+        .expect(204)
+        .then(({body}) => {
+            expect(body).toEqual({})
+        })
+    })
+    test('404: should inform the user the comment_id does not exist', () => {
+        return request(app)
+        .delete('/api/comments/999')
+        .expect(404)
+        .then(({ body }) => {
+        expect(body.msg).toEqual('Comment not found.')
+        })
+    })
+    test('400: should inform the user the comment_id is incorrect format', () => {
+        return request(app)
+        .delete('/api/comments/an-id')
+        .expect(400)
+        .then(({ body }) => {
+        expect(body.msg).toEqual('Bad request')
+        })
+    })
+});
 describe('GET /api/users', ()=>{
     test('200: should respond with all users', () =>{
         return request(app)
