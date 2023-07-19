@@ -45,7 +45,7 @@ exports.selectAllArticles = (topic, sort_by = 'created_at', order = 'desc') => {
     ON a.article_id = c.article_id`;
 
     const validSortBy = ['title', 'article_id', 'votes', 'created_at', 'topic']
-    const validTopics = ['mitch', 'cats', 'paper']
+    const validTopics = ['mitch', 'cats', 'paper', 'coding', 'footbal', 'cooking']
     const validOrderBy = ['asc', 'desc']
     const values = []
 
