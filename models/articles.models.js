@@ -44,7 +44,7 @@ exports.selectAllArticles = (sort_by = 'created_at', order = 'desc', topic) => {
     LEFT JOIN comments AS c 
     ON a.article_id = c.article_id`;
 
-    const validSortBy = ['title', 'article_id', 'comments', 'votes', 'created_at', 'topic']
+    const validSortBy = ['title', 'article_id', 'comment_count', 'votes', 'created_at', 'topic']
     const validOrderBy = ['asc', 'desc']
     const values = []
  
