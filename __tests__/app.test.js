@@ -90,6 +90,7 @@ describe('GET /api/articles/:article_id', () => {
                 })
             })
 })
+
 describe('/api/articles', () => {
     test('200: should return a list of all the articles', () => {
         return request(app)
@@ -343,6 +344,16 @@ describe('GET /api/users', ()=>{
     })
 })
 describe('FEATURE: GET /api/articles (queries)', () =>{
+    test('200: should respond with an array of the articles filtered by a specific search keyword', () => { 
+        return request(app)
+        .get('/api/articles?search=existence')
+        .expect(200)
+        .then(({ body }) => {
+        expect(body.articles.length).toBeGreaterThan(0)
+        body.articles.forEach((article) => 
+            expect(article.body).toEqual('I find this existence challenging'))
+        })
+    })
     test('200: should respond with an array of the articles filtered by a specific topic', () => { 
         return request(app)
         .get('/api/articles?topic=mitch&sort_by=created_at&order=desc')

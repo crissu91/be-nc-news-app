@@ -30,7 +30,7 @@ exports.selectArticlesById = (article_id) =>{
         })
 }
 
-exports.selectAllArticles = (sort_by = 'created_at', order = 'desc', topic) => {
+exports.selectAllArticles = (sort_by = 'created_at', order = 'desc', topic, search) => {
     let articlesQuery = `SELECT
         a.article_id,
         a.title,
@@ -39,6 +39,7 @@ exports.selectAllArticles = (sort_by = 'created_at', order = 'desc', topic) => {
         a.created_at,
         a.votes,
         a.article_img_url,
+        a.body,
         COUNT(c.comment_id) AS comment_count
     FROM articles AS a
     LEFT JOIN comments AS c 
@@ -60,8 +61,15 @@ exports.selectAllArticles = (sort_by = 'created_at', order = 'desc', topic) => {
         values.push(topic)
     }
 
+    if (topic && search) {
+        values.push(' AND ')
+    }
+    if (search) {
+        articlesQuery += ` WHERE a.body LIKE '%' || $1 || '%'`;
+        values.push(search)
+    }
+
     articlesQuery += ` GROUP BY a.article_id ORDER BY ${sort_by} ${order}`;
-    
     return db.query(articlesQuery, values).then(({ rows }) => {
         return rows
     })
