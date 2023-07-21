@@ -57,19 +57,19 @@ exports.selectAllArticles = (sort_by = 'created_at', order = 'desc', topic, sear
     }
 
     if (topic) {
-        articlesQuery += ` WHERE topic = $1`;
+        articlesQuery += ` WHERE a.topic = $1`;
         values.push(topic)
     }
 
     if (topic && search) {
-        values.push(' AND ')
+        articlesQuery += ' AND '
     }
     if (search) {
-        articlesQuery += ` WHERE a.body LIKE '%' || $1 || '%'`;
+        articlesQuery += ` ${topic ? '' : 'WHERE'} a.body LIKE '%' || $${topic ? '2' : '1'} || '%'`;
         values.push(search)
     }
-
     articlesQuery += ` GROUP BY a.article_id ORDER BY ${sort_by} ${order}`;
+
     return db.query(articlesQuery, values).then(({ rows }) => {
         return rows
     })

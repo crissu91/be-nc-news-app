@@ -354,6 +354,16 @@ describe('FEATURE: GET /api/articles (queries)', () =>{
             expect(article.body).toEqual('I find this existence challenging'))
         })
     })
+    test('200: should respond with an array of the articles filtered by a specific search keyword and has a topic selected', () => { 
+        return request(app)
+        .get('/api/articles?search=existence&topic=mitch')
+        .expect(200)
+        .then(({ body }) => {
+        expect(body.articles.length).toBeGreaterThan(0)
+        body.articles.forEach((article) => 
+            expect(article.body).toEqual('I find this existence challenging'))
+        })
+    })
     test('200: should respond with an array of the articles filtered by a specific topic', () => { 
         return request(app)
         .get('/api/articles?topic=mitch&sort_by=created_at&order=desc')
