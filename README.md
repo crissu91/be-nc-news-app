@@ -54,9 +54,9 @@ Finally to run the server enter the following command in your terminal window:
   $ npm run start
   ```
 This will run the server on port 9090. All endpoints can be found locally on ```http://localhost:9090```.
-
+ ```
 # Testing
-
+ ```
 To test the API navigate to the project directory and enter the following command:
   ```
   $ npm test
@@ -92,26 +92,33 @@ Returns an article for specified id
 PUT /api/articles/:article_id
 ```
 Increment the votes of an article by one
-
 ```
 PUT /api/comments/:comment_id
 ```
-Increment or Decrement the votes of a comment by one. Requires a vote query of 'up' or 'down', e.g: /api/comments/:comment_id?vote=down
-
+Increment the votes of a comment by one. Requires a vote query of 'up', e.g: /api/comments/:comment_id?vote=up
 ```
 DELETE /api/comments/:comment_id
 ```
 Deletes a comment
+```
+GET /api/users/:username
+```
+Returns an object with the profile data for the specified user
+```
+POST /api/users/:username
+```
+Posts an object with the profile data for the specified user
 
+ ```
 # Authors
-
+ ```
 - Cristina Stefan
-
+ ```
 # License
-
+ ```
 This project is licensed and owned by NorthCoders.
-
+ ```
 # Acknowledgments
-
+ ```
 Thanks to all the tutors for all the NChelp during this project.
-
+ ```
