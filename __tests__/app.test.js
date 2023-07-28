@@ -48,7 +48,60 @@ describe("GET api/topics", () => {
         expect (body.msg).toBe("Bad request");
         })
     })
+})
+describe('POST /api/users', () => {
+	test('201: Returns if passed a non existent username', () => {
+		const newUser = {
+			username: 'testUser6',
+			name: 'testUser',
+			avatar_url: 'https://example.com/avatar.png'
+        };
+		return request(app)
+			.post('/api/users')
+			.send(newUser)
+			.expect(201)
+			.then(({ body }) => {
+				expect(body.postedUser[0]).toEqual(
+					expect.objectContaining({
+						username: expect.any(String),
+						name: expect.any(String),
+						avatar_url: expect.any(String),
+					})
+				);
+			});
+	});
+	test('404: Returns if username already exists', () => {
+		const newUser = {
+			username: 'butter_bridge',
+			name: 'testUser',
+			avatar_url: 'https://example.com/avatar.png'
+		};
+		return request(app)
+			.post('/api/users')
+			.send(newUser)
+			.expect(400)
+			.then(({ body }) => {
+				expect(body.msg).toBe('Bad request');
+			});
+	})
 });
+
+describe('GET /api/users/:username', () => {
+	test('200: Should return user object according to passed username', () => {
+		return request(app)
+			.get('/api/users/butter_bridge')
+			.expect(200)
+			.then(({ body }) => {
+				expect(body.user[0]).toEqual(
+					expect.objectContaining({
+						username: expect.any(String),
+						name: expect.any(String),
+						avatar_url: expect.any(String),
+					})
+				);
+			});
+    });
+})  
 describe("/api test suite", () => {
     test("200: should respond a description of all other endpoints available", () => {
     return request(app)
