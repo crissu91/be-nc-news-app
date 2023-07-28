@@ -4,7 +4,7 @@ const { getApi } = require('./controllers/api.controller')
 const { getAllTopics } = require('./controllers/topics.controller');
 const { getCommentsByArticleId, postCommentByArticleId, deleteCommentById } = require('./controllers/comments.controller');
 const { getArticlesById, getAllArticles, patchArticleById } = require('./controllers/articles.controller');
-const { getAllUsers } = require('./controllers/users.controller');
+const { getAllUsers, postNewUser, getUserByUsername } = require('./controllers/users.controller');
 const cors = require('cors');
 
 const app = express();
@@ -30,6 +30,10 @@ app.patch('/api/articles/:article_id', patchArticleById);
 app.delete('/api/comments/:comment_id', deleteCommentById );
 
 app.get('/api/users', getAllUsers);
+
+app.post('/api/users', postNewUser);
+
+app.get('/api/users/:username', getUserByUsername)
 
 app.use(handleCustomErrors);
 
